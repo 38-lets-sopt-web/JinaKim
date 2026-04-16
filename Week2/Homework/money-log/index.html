@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="icon-area">
+        <span>💰</span>
+      </div>
+      <div class="title">
+        <h1>지나 가계부</h1>
+      </div>
+      <div class="text-area">
+        <span>SOPT 38th WEB</span>
+      </div>
+    </header>
+    <main class="main-content">
+      <div class="search-filter-container">
+        <h3>검색필터</h3>
+        <div class="grid-container">
+          <div class="search-area">
+            <label for="title">제목</label>
+            <input
+              id="title"
+              name="title"
+              class="search-bar"
+              placeholder="내역을 입력하세요"
+            />
+          </div>
+          <div class="sub-filtering">
+            <label for="type">유형</label>
+            <select id="type" name="type">
+              <option value="">전체</option>
+              <option value="income">수입</option>
+              <option value="expense">지출</option>
+            </select>
+          </div>
+          <div class="sub-filtering">
+            <label for="category">카테고리</label>
+            <select id="category" name="category">
+              <option value="">전체</option>
+              <option value="food">식비</option>
+              <option value="salary">월급</option>
+              <option value="culture">문화</option>
+              <option value="transport">교통</option>
+              <option value="living">생활</option>
+              <option value="etc">기타</option>
+            </select>
+          </div>
+          <div class="sub-filtering">
+            <label for="payment">결제수단</label>
+            <select id="payment" name="payment">
+              <option value="">전체</option>
+              <option value="cash">현금</option>
+              <option value="debit-card">체크카드</option>
+              <option value="credit-card">신용카드</option>
+            </select>
+          </div>
+          <button class="filtering-button apply-button" type="button">
+            적용
+          </button>
+          <button class="filtering-button reset-button" type="reset">
+            초기화
+          </button>
+        </div>
+      </div>
+      <div class="content-box">
+        <div class="control-area">
+          <div class="sort-area">
+            <label for="sort" class="sr-only">정렬 방식</label>
+            <select id="sort" class="sort" name="sort">
+              <option value="latest">날짜 내림차순</option>
+              <option value="oldest">날짜 오름차순</option>
+            </select>
+          </div>
+          <div class="control-button-area">
+            <button class="control-button delete-button" type="button">
+              선택 삭제
+            </button>
+            <button class="control-button add-button" type="button">
+              추가
+            </button>
+          </div>
+        </div>
+        <div class="table-area">
+          <table class="money-log-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" /></th>
+                <th>제목</th>
+                <th>금액</th>
+                <th>날짜</th>
+                <th>카테고리</th>
+                <th>결제수단</th>
+              </tr>
+            </thead>
+            <tbody id="expense-list"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2">total</td>
+                <td colspan="4">점심</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="index.js"></script>
+  </body>
+</html>
