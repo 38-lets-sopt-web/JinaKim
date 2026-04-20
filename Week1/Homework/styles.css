@@ -1,21 +1,49 @@
-* {
+:root {
+  --header-height: 80px;
+  --nav-offset: 40px;
+}
+
+/* reset */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+li {
   margin: 0;
   padding: 0;
 }
 
+ul {
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* base */
 body {
   background-color: rgb(252, 244, 233);
 }
 
+/* layout */
 .main-header {
   display: flex;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 100;
-  height: 80px;
-  padding: 20px 0px;
+  min-height: var(--header-height);
+  padding: 20px 0;
   background-color: blanchedalmond;
 }
 
@@ -24,24 +52,23 @@ body {
 }
 
 .main-header img {
-  display: block;
   width: 50px;
   height: 50px;
   border-radius: 50%;
 }
 
-.left {
+.profile-area {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   padding-left: 40px;
 }
 
-.left img {
+.profile-area img {
   transition: box-shadow 0.25s ease;
 }
 
-.left img:hover {
+.profile-area img:hover {
   box-shadow: 0 0px 16px rgba(0, 0, 0, 0.6);
 }
 
@@ -52,18 +79,22 @@ body {
   justify-content: center;
 }
 
-.right {
+.title > h1 {
+  font-size: 24px;
+}
+
+.social-link-area {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   padding-right: 40px;
 }
 
-.right img {
+.social-link-area img {
   transition: transform 0.25s ease;
 }
 
-.right img:hover {
+.social-link-area img:hover {
   transform: translateY(-2px);
 }
 
@@ -74,7 +105,7 @@ body {
 
 nav {
   position: sticky;
-  top: 120px;
+  top: calc(var(--header-height) + var(--nav-offset));
   width: 180px;
   height: fit-content;
   padding: 10px;
@@ -86,32 +117,29 @@ nav ul {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  list-style: none;
 }
 
 nav a {
+  display: block;
+  padding: 10px 15px;
+  border-radius: 20px;
   color: black;
   text-decoration: none;
 }
 
-nav li {
-  padding: 10px 15px;
-  border-radius: 20px;
-}
-
-nav li:first-child {
+nav li:first-child a {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
 
-nav li:last-child {
+nav li:last-child a {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
 
-nav li:hover {
+nav a:hover,
+nav a:focus-visible {
   background-color: blanchedalmond;
-  cursor: pointer;
 }
 
 main {
@@ -124,7 +152,7 @@ main {
 }
 
 section {
-  scroll-margin-top: 120px;
+  scroll-margin-top: calc(var(--header-height) + var(--nav-offset));
 }
 
 .section-header {
@@ -211,7 +239,7 @@ section {
   transition: transform 0.25s ease;
 }
 
-.flex-container {
+.interest-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 20px;
@@ -231,14 +259,14 @@ section {
   transform: translateY(-6px);
 }
 
-.item-box > div {
+.item-content {
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 15px 20px;
 }
 
-.item-box h4::before {
+.item-box h3::before {
   content: "💫";
   padding-right: 3px;
 }
@@ -270,23 +298,23 @@ section {
   background-color: rgb(255, 175, 201);
 }
 
-.message-box {
+.message-list {
   padding: 30px;
   background-color: white;
   border-radius: 20px;
   line-height: 200%;
 }
 
-#friends p::before {
+.message-list li::before {
   content: "🙇‍♀";
   padding-right: 10px;
 }
 
-#friends p::after {
+.message-list li::after {
   content: "🔥";
 }
 
-footer {
+footer > p {
   height: 100px;
   background-color: blanchedalmond;
   text-align: center;
