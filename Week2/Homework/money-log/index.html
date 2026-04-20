@@ -11,7 +11,7 @@
       <div class="icon-area">
         <span>💰</span>
       </div>
-      <div class="title">
+      <div class="page-title">
         <h1>지나 가계부</h1>
       </div>
       <div class="text-area">
@@ -35,35 +35,43 @@
             <label for="type">유형</label>
             <select id="type" name="type">
               <option value="">전체</option>
-              <option value="income">수입</option>
-              <option value="expense">지출</option>
+              <option value="수입">수입</option>
+              <option value="지출">지출</option>
             </select>
           </div>
           <div class="sub-filtering">
             <label for="category">카테고리</label>
             <select id="category" name="category">
               <option value="">전체</option>
-              <option value="food">식비</option>
-              <option value="salary">월급</option>
-              <option value="culture">문화</option>
-              <option value="transport">교통</option>
-              <option value="living">생활</option>
-              <option value="etc">기타</option>
+              <option value="식비">식비</option>
+              <option value="월급">월급</option>
+              <option value="문화">문화</option>
+              <option value="교통">교통</option>
+              <option value="생활">생활</option>
+              <option value="기타">기타</option>
             </select>
           </div>
           <div class="sub-filtering">
             <label for="payment">결제수단</label>
             <select id="payment" name="payment">
               <option value="">전체</option>
-              <option value="cash">현금</option>
-              <option value="debit-card">체크카드</option>
-              <option value="credit-card">신용카드</option>
+              <option value="현금">현금</option>
+              <option value="체크카드">체크카드</option>
+              <option value="신용카드">신용카드</option>
             </select>
           </div>
-          <button class="filtering-button apply-button" type="button">
+          <button
+            id="filter-apply-button"
+            class="filtering-button"
+            type="button"
+          >
             적용
           </button>
-          <button class="filtering-button reset-button" type="reset">
+          <button
+            id="filter-reset-button"
+            class="filtering-button"
+            type="reset"
+          >
             초기화
           </button>
         </div>
