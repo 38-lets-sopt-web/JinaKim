@@ -131,3 +131,59 @@ const deletingExpenses = () => {
 };
 
 deleteButton.addEventListener("click", deletingExpenses);
+
+//내역 추가 모달 구현
+const addBtn = document.querySelector("#add-button");
+const addModal = document.querySelector("#add-modal");
+const closeModalBtn = document.querySelector("#close-modal-button");
+const modalAddBtn = document.querySelector("#modal-add-button");
+
+const openModal = () => addModal.classList.remove("hidden");
+const closeModal = () => addModal.classList.add("hidden");
+
+addBtn.addEventListener("click", openModal);
+closeModalBtn.addEventListener("click", closeModal);
+
+const addTitleInput = document.querySelector("#add-title-input");
+const addTypeInput = document.querySelector("#add-type-input");
+const addAmountInput = document.querySelector("#add-amount-input");
+const addDateInput = document.querySelector("#add-date-input");
+const addCategoryInput = document.querySelector("#add-category-input");
+const addPaymentInput = document.querySelector("#add-payment-input");
+
+/** 내역 추가 함수 */
+const addExpense = () => {
+  if (
+    !addTitleInput.value ||
+    !addTypeInput.value ||
+    !addAmountInput.value ||
+    !addDateInput.value ||
+    !addCategoryInput.value ||
+    !addPaymentInput.value
+  ) {
+    alert("내용을 모두 입력해주세요");
+    return;
+  }
+
+  const signedAmount =
+    addTypeInput.value === "수입"
+      ? Number(addAmountInput.value)
+      : -Number(addAmountInput.value);
+
+  const newExpense = {
+    id: Date.now(),
+    title: addTitleInput.value,
+    type: addTypeInput.value,
+    amount: signedAmount,
+    date: addDateInput.value,
+    category: addCategoryInput.value,
+    payment: addPaymentInput.value,
+  };
+
+  storedExpenses.push(newExpense);
+  localStorage.setItem("expenseData", JSON.stringify(storedExpenses));
+  renderExpenses(storedExpenses);
+  closeModal();
+};
+
+modalAddBtn.addEventListener("click", addExpense);

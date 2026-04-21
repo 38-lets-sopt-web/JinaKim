@@ -20,7 +20,7 @@
     </header>
     <main class="main-content">
       <div class="search-filter-container">
-        <h3>검색필터</h3>
+        <h2>검색필터</h2>
         <div class="grid-container">
           <div class="search-area">
             <label for="title">제목</label>
@@ -117,6 +117,76 @@
         </div>
       </div>
     </main>
+
+    <!--모달 화면-->
+    <div id="add-modal" class="modal hidden">
+      <div class="modal-content">
+        <header class="modal-header">
+          <h2>내역 추가</h2>
+          <button id="close-modal-button" class="close-button" type="button">
+            ✕
+          </button>
+        </header>
+        <div class="add-content">
+          <div class="content-input title-area">
+            <label for="add-title-input">제목</label>
+            <input
+              id="add-title-input"
+              name="add-title-input"
+              placeholder="제목을 입력하세요"
+            />
+          </div>
+          <div class="content-input type-area">
+            <label for="add-type-input">유형</label>
+            <select id="add-type-input" name="add-type-input">
+              <option value="지출">지출 (-)</option>
+              <option value="수입">수입 (+)</option>
+            </select>
+          </div>
+          <div class="content-input amount-area">
+            <label for="add-amount-input">금액 (숫자만)</label>
+            <input
+              id="add-amount-input"
+              name="add-amount-input"
+              placeholder="금액을 입력하세요"
+            />
+          </div>
+          <div class="content-input date-area">
+            <label for="add-date-input">날짜</label>
+            <input id="add-date-input" name="add-date-input" type="date" />
+          </div>
+          <div class="content-input category-area">
+            <label for="add-category-input">카테고리</label>
+            <select id="add-category-input" name="add-category-input">
+              <option value="">선택</option>
+              <option value="식비">식비</option>
+              <option value="월급">월급</option>
+              <option value="문화">문화</option>
+              <option value="교통">교통</option>
+              <option value="생활">생활</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div class="content-input payment-area">
+            <label for="add-payment-input">결제수단</label>
+            <select id="add-payment-input" name="add-payment-input">
+              <option value="">선택</option>
+              <option value="현금">현금</option>
+              <option value="체크카드">체크카드</option>
+              <option value="신용카드">신용카드</option>
+            </select>
+          </div>
+        </div>
+        <button
+          id="modal-add-button"
+          class="control-button modal-add-button"
+          type="submit"
+        >
+          추가
+        </button>
+      </div>
+    </div>
+
     <script type="module" src="index.js"></script>
   </body>
 </html>
