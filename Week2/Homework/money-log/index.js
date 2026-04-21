@@ -7,6 +7,9 @@ const createCell = (text) => {
   return td;
 };
 
+const isIncome = (expense) => expense.amount > 0;
+const isExpense = (expense) => expense.amount < 0;
+
 /** 표 렌더링 함수 */
 const expenseList = document.querySelector("#expense-list");
 
@@ -30,6 +33,12 @@ const renderExpenses = (expenseArray) => {
     const categoryTd = createCell(expense.category);
     const paymentTd = createCell(expense.payment);
 
+    if (isIncome(expense)) {
+      amountTd.classList.add("income");
+    } else if (isExpense(expense)) {
+      amountTd.classList.add("expense");
+    }
+
     tr.appendChild(titleTd);
     tr.appendChild(amountTd);
     tr.appendChild(dateTd);
@@ -41,7 +50,7 @@ const renderExpenses = (expenseArray) => {
 };
 
 // localStorage의 데이터를 테이블에 렌더링
-const storedExpenses = JSON.parse(localStorage.getItem("expenseData")) || [];
+let storedExpenses = JSON.parse(localStorage.getItem("expenseData")) || [];
 
 renderExpenses(storedExpenses);
 
@@ -70,8 +79,8 @@ const applyFiltering = () => {
   } else if (type !== "") {
     filteringExpenses =
       type === "수입"
-        ? storedExpenses.filter((expense) => expense.amount > 0)
-        : storedExpenses.filter((expense) => expense.amount < 0);
+        ? storedExpenses.filter(isIncome)
+        : storedExpenses.filter(isExpense);
   } else if (category !== "") {
     filteringExpenses = storedExpenses.filter(
       (expense) => expense.category === category,
@@ -99,3 +108,26 @@ const resetFiltering = () => {
 
 applyButton.addEventListener("click", applyFiltering);
 resetButton.addEventListener("click", resetFiltering);
+
+//삭제 기능
+const deleteButton = document.querySelector("#delete-button");
+
+/** 선택 삭제 함수 */
+const deletingExpenses = () => {
+  const checkedList = document.querySelectorAll(
+    'input[type="checkbox"]:checked',
+  );
+
+  const checkedIdList = Array.from(checkedList).map((checkbox) =>
+    Number(checkbox.closest("tr").dataset.id),
+  );
+
+  storedExpenses = storedExpenses.filter(
+    (expense) => !checkedIdList.includes(expense.id),
+  );
+
+  localStorage.setItem("expenseData", JSON.stringify(storedExpenses));
+  renderExpenses(storedExpenses);
+};
+
+deleteButton.addEventListener("click", deletingExpenses);
