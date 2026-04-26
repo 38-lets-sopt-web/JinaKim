@@ -45,6 +45,10 @@ body {
   align-items: center;
 }
 
+.header-icon {
+  cursor: pointer;
+}
+
 .main-content {
   display: flex;
   flex-direction: column;
