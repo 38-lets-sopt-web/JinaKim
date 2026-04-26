@@ -142,6 +142,11 @@ const closeModal = () => addModal.classList.add("hidden");
 
 addBtn.addEventListener("click", openModal);
 closeModalBtn.addEventListener("click", closeModal);
+addModal.addEventListener("click", (event) => {
+  if (event.target === addModal) {
+    closeModal();
+  }
+});
 
 const addTitleInput = document.querySelector("#add-title-input");
 const addTypeInput = document.querySelector("#add-type-input");
