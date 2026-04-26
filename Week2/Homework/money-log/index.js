@@ -1,5 +1,9 @@
 import { expenses } from "./mockData.js";
 
+//헤더 아이콘 클릭 시 새로고침
+const headerIcon = document.querySelector("#header-icon");
+headerIcon.addEventListener("click", () => window.location.reload());
+
 /** 셀 만들기 함수 */
 const createCell = (text) => {
   const td = document.createElement("td");
@@ -7,12 +11,13 @@ const createCell = (text) => {
   return td;
 };
 
+//표 만들기
 const isIncome = (expense) => expense.amount > 0;
 const isExpense = (expense) => expense.amount < 0;
 
-/** 표 렌더링 함수 */
 const expenseList = document.querySelector("#expense-list");
 
+/** 표 렌더링 함수 */
 const renderExpenses = (expenseArray) => {
   expenseList.innerHTML = "";
 
@@ -63,35 +68,29 @@ const paymentInput = document.querySelector("#payment");
 const applyButton = document.querySelector("#filter-apply-button");
 const resetButton = document.querySelector("#filter-reset-button");
 
-/** 필터링 적용 버튼 (개별로만 가능) */
+/** 필터링 적용 버튼 (AND 필터링 가능) */
 const applyFiltering = () => {
   const keyword = titleInput.value.trim();
   const type = typeInput.value;
   const category = categoryInput.value;
   const payment = paymentInput.value;
 
-  let filteringExpenses = storedExpenses;
+  const filteringExpenses = storedExpenses.filter((expense) => {
+    const isMatchedKeyword = keyword === "" || expense.title.includes(keyword);
 
-  if (keyword !== "") {
-    filteringExpenses = storedExpenses.filter((expense) =>
-      expense.title.includes(keyword),
-    );
-  } else if (type !== "") {
-    filteringExpenses =
-      type === "수입"
-        ? storedExpenses.filter(isIncome)
-        : storedExpenses.filter(isExpense);
-  } else if (category !== "") {
-    filteringExpenses = storedExpenses.filter(
-      (expense) => expense.category === category,
-    );
-  } else if (payment !== "") {
-    filteringExpenses = storedExpenses.filter(
-      (expense) => expense.payment === payment,
-    );
-  }
+    const isMatchedType =
+      type === "" ||
+      (type === "수입" && isIncome(expense)) ||
+      (type === "지출" && isExpense(expense));
 
-  console.log(filteringExpenses);
+    const isMatchedCategory = category === "" || expense.category === category;
+
+    const isMatchedPayment = payment === "" || expense.payment === payment;
+
+    return (
+      isMatchedKeyword && isMatchedType && isMatchedCategory && isMatchedPayment
+    );
+  });
 
   renderExpenses(filteringExpenses);
 };
