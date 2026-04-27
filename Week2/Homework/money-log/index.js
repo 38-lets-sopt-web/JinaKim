@@ -11,6 +11,25 @@ const createCell = (text) => {
   return td;
 };
 
+/** 날짜 내림차순 정렬 함수 */
+const sortByDateDesc = (expenses) => {
+  return [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
+};
+
+/** 날짜 오름차순 정렬 함수 */
+const sortByDateAsc = (expenses) => {
+  return [...expenses].sort((a, b) => new Date(a.date) - new Date(b.date));
+};
+
+/** 현재 정렬 방식에 맞게 정렬하는 함수 */
+const sortExpenses = (expenseArray) => {
+  if (currentSortType === "desc") {
+    return sortByDateDesc(expenseArray);
+  }
+
+  return sortByDateAsc(expenseArray);
+};
+
 //표 만들기
 const isIncome = (expense) => expense.amount > 0;
 const isExpense = (expense) => expense.amount < 0;
@@ -58,8 +77,9 @@ const renderExpenses = (expenseArray) => {
 
 // localStorage의 데이터를 테이블에 렌더링
 let storedExpenses = JSON.parse(localStorage.getItem("expenseData")) || [];
+let currentSortType = "desc";
 
-renderExpenses(storedExpenses);
+renderExpenses(sortByDateDesc(storedExpenses));
 
 // 검색 필터링
 const titleInput = document.querySelector("#title");
@@ -70,31 +90,55 @@ const paymentInput = document.querySelector("#payment");
 const applyButton = document.querySelector("#filter-apply-button");
 const resetButton = document.querySelector("#filter-reset-button");
 
-/** 필터링 적용 버튼 (AND 필터링 가능) */
+/** 현재 필터 입력값을 가져오는 함수 */
+const getFilterValues = () => {
+  return {
+    keyword: titleInput.value.trim(),
+    type: typeInput.value,
+    category: categoryInput.value,
+    payment: paymentInput.value,
+  };
+};
+
+/** 필터 조건 확인 함수 */
+const isMatchedFilter = (expense, filters) => {
+  const isMatchedKeyword =
+    filters.keyword === "" || expense.title.includes(filters.keyword);
+
+  const isMatchedType =
+    filters.type === "" ||
+    (filters.type === "수입" && isIncome(expense)) ||
+    (filters.type === "지출" && isExpense(expense));
+
+  const isMatchedCategory =
+    filters.category === "" || expense.category === filters.category;
+
+  const isMatchedPayment =
+    filters.payment === "" || expense.payment === filters.payment;
+
+  return (
+    isMatchedKeyword && isMatchedType && isMatchedCategory && isMatchedPayment
+  );
+};
+
+/** 필터링 된 배열을 반환하는 함수 */
+const filterExpenses = (expenseArray) => {
+  const filters = getFilterValues();
+
+  return expenseArray.filter((expense) => isMatchedFilter(expense, filters));
+};
+
+/** 필터와 정렬을 모두 적용하여 렌더링하는 함수 */
+const renderFilteredAndSortedExpenses = () => {
+  const filteredExpenses = filterExpenses(storedExpenses);
+  const sortedExpenses = sortExpenses(filteredExpenses);
+
+  renderExpenses(sortedExpenses);
+};
+
+/** 필터링 적용 버튼 */
 const applyFiltering = () => {
-  const keyword = titleInput.value.trim();
-  const type = typeInput.value;
-  const category = categoryInput.value;
-  const payment = paymentInput.value;
-
-  const filteringExpenses = storedExpenses.filter((expense) => {
-    const isMatchedKeyword = keyword === "" || expense.title.includes(keyword);
-
-    const isMatchedType =
-      type === "" ||
-      (type === "수입" && isIncome(expense)) ||
-      (type === "지출" && isExpense(expense));
-
-    const isMatchedCategory = category === "" || expense.category === category;
-
-    const isMatchedPayment = payment === "" || expense.payment === payment;
-
-    return (
-      isMatchedKeyword && isMatchedType && isMatchedCategory && isMatchedPayment
-    );
-  });
-
-  renderExpenses(filteringExpenses);
+  renderFilteredAndSortedExpenses();
 };
 
 /** 초기화 버튼 */
@@ -104,7 +148,7 @@ const resetFiltering = () => {
   categoryInput.value = "";
   paymentInput.value = "";
 
-  renderExpenses(storedExpenses);
+  renderFilteredAndSortedExpenses();
 };
 
 applyButton.addEventListener("click", applyFiltering);
@@ -128,7 +172,7 @@ const deletingExpenses = () => {
   );
 
   localStorage.setItem("expenseData", JSON.stringify(storedExpenses));
-  renderExpenses(storedExpenses);
+  renderFilteredAndSortedExpenses();
 };
 
 deleteButton.addEventListener("click", deletingExpenses);
@@ -209,7 +253,7 @@ const addExpense = () => {
 
   storedExpenses.push(newExpense);
   localStorage.setItem("expenseData", JSON.stringify(storedExpenses));
-  renderExpenses(storedExpenses);
+  renderFilteredAndSortedExpenses();
   closeModal("add-modal");
 };
 
@@ -256,3 +300,11 @@ const handleExpenseTitleClick = (event) => {
 };
 
 expenseList.addEventListener("click", handleExpenseTitleClick);
+
+// 날짜 순으로 정렬
+const sortSelector = document.querySelector("#sort");
+
+sortSelector.addEventListener("change", () => {
+  currentSortType = sortSelector.value;
+  renderFilteredAndSortedExpenses();
+});
