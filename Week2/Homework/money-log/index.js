@@ -30,6 +30,21 @@ const sortExpenses = (expenseArray) => {
   return sortByDateAsc(expenseArray);
 };
 
+//total 값 계산
+const totalAmount = document.querySelector("#total-amount");
+
+/** total 값 계산 함수 */
+const calTotalAmount = (expenses) => {
+  return expenses.reduce((total, expense) => {
+    return (total += Number(expense.amount));
+  }, 0);
+};
+
+/** total 값 렌더링 함수 */
+const renderTotalAmount = (expenses) => {
+  totalAmount.textContent = `${calTotalAmount(expenses).toLocaleString()}원`;
+};
+
 //표 만들기
 const isIncome = (expense) => expense.amount > 0;
 const isExpense = (expense) => expense.amount < 0;
@@ -75,6 +90,8 @@ const renderExpenses = (expenseArray) => {
 
     expenseList.appendChild(tr);
   });
+
+  renderTotalAmount(expenseArray);
 };
 
 // localStorage의 데이터를 테이블에 렌더링
