@@ -38,6 +38,8 @@ const renderExpenses = (expenseArray) => {
     const categoryTd = createCell(expense.category);
     const paymentTd = createCell(expense.payment);
 
+    titleTd.classList.add("expense-title");
+
     if (isIncome(expense)) {
       amountTd.classList.add("income");
     } else if (isExpense(expense)) {
@@ -131,29 +133,50 @@ const deletingExpenses = () => {
 
 deleteButton.addEventListener("click", deletingExpenses);
 
-//내역 추가 모달 구현
-const addBtn = document.querySelector("#add-button");
-const addModal = document.querySelector("#add-modal");
-const closeModalBtn = document.querySelector("#close-modal-button");
-const modalAddBtn = document.querySelector("#modal-add-button");
+// 모달 공통
+const openModal = (modalId) => {
+  const modal = document.querySelector(`#${modalId}`);
+  modal.classList.remove("hidden");
+};
 
-const openModal = () => addModal.classList.remove("hidden");
-const closeModal = () => addModal.classList.add("hidden");
+const closeModal = (modalId) => {
+  const modal = document.querySelector(`#${modalId}`);
+  modal.classList.add("hidden");
+};
 
-addBtn.addEventListener("click", openModal);
-closeModalBtn.addEventListener("click", closeModal);
-addModal.addEventListener("click", (event) => {
-  if (event.target === addModal) {
-    closeModal();
-  }
+const modalOpenButtons = document.querySelectorAll("[data-modal-open]");
+const modalCloseButtons = document.querySelectorAll("[data-modal-close]");
+const modals = document.querySelectorAll(".modal");
+
+modalOpenButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    openModal(button.dataset.modalOpen);
+  });
 });
 
+modalCloseButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    closeModal(button.dataset.modalClose);
+  });
+});
+
+modals.forEach((modal) => {
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeModal(modal.id);
+    }
+  });
+});
+
+//내역 추가 모달 구현
 const addTitleInput = document.querySelector("#add-title-input");
 const addTypeInput = document.querySelector("#add-type-input");
 const addAmountInput = document.querySelector("#add-amount-input");
 const addDateInput = document.querySelector("#add-date-input");
 const addCategoryInput = document.querySelector("#add-category-input");
 const addPaymentInput = document.querySelector("#add-payment-input");
+
+const addExpenseBtn = document.querySelector("#add-expense-button");
 
 /** 내역 추가 함수 */
 const addExpense = () => {
@@ -187,7 +210,49 @@ const addExpense = () => {
   storedExpenses.push(newExpense);
   localStorage.setItem("expenseData", JSON.stringify(storedExpenses));
   renderExpenses(storedExpenses);
-  closeModal();
+  closeModal("add-modal");
 };
 
-modalAddBtn.addEventListener("click", addExpense);
+addExpenseBtn.addEventListener("click", addExpense);
+
+//세부 내용 모달 구현
+const detailTitle = document.querySelector("#detail-title");
+const detailAmount = document.querySelector("#detail-amount");
+const detailDate = document.querySelector("#detail-date");
+const detailCategory = document.querySelector("#detail-category");
+const detailPayment = document.querySelector("#detail-payment");
+
+/** 세부 모달 열기 */
+const openDetailModal = (expense) => {
+  detailTitle.textContent = expense.title;
+  detailAmount.textContent = `${expense.amount}원`;
+  detailDate.textContent = expense.date;
+  detailCategory.textContent = expense.category;
+  detailPayment.textContent = expense.payment;
+
+  openModal("detail-modal");
+};
+
+/** 제목 셀 클릭 시 세부 모달을 여는 함수 */
+const handleExpenseTitleClick = (event) => {
+  const titleCell = event.target.closest(".expense-title");
+
+  if (!titleCell) {
+    return;
+  }
+
+  const row = titleCell.closest("tr");
+  const expenseId = Number(row.dataset.id);
+
+  const selectedExpense = storedExpenses.find((expense) => {
+    return expense.id === expenseId;
+  });
+
+  if (!selectedExpense) {
+    return;
+  }
+
+  openDetailModal(selectedExpense);
+};
+
+expenseList.addEventListener("click", handleExpenseTitleClick);

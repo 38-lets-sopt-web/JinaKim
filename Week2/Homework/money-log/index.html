@@ -89,7 +89,11 @@
             <button id="delete-button" class="control-button" type="button">
               선택 삭제
             </button>
-            <button id="add-button" class="control-button" type="button">
+            <button
+              data-modal-open="add-modal"
+              class="control-button"
+              type="button"
+            >
               추가
             </button>
           </div>
@@ -118,12 +122,16 @@
       </div>
     </main>
 
-    <!--모달 화면-->
+    <!-- 내역 추가 모달 -->
     <div id="add-modal" class="modal hidden">
       <div class="modal-content">
         <header class="modal-header">
           <h2>내역 추가</h2>
-          <button id="close-modal-button" class="close-button" type="button">
+          <button
+            data-modal-close="add-modal"
+            class="close-button"
+            type="button"
+          >
             ✕
           </button>
         </header>
@@ -178,12 +186,50 @@
           </div>
         </div>
         <button
-          id="modal-add-button"
-          class="control-button modal-add-button"
+          id="add-expense-button"
+          class="control-button add-expense-button"
           type="submit"
         >
           추가
         </button>
+      </div>
+    </div>
+
+    <!-- 세부 내용 모달 -->
+    <div id="detail-modal" class="modal hidden">
+      <div class="modal-content">
+        <header class="modal-header">
+          <h2>항목 상세</h2>
+          <button
+            data-modal-close="detail-modal"
+            class="close-button"
+            type="button"
+          >
+            ✕
+          </button>
+        </header>
+        <div class="detail-content">
+          <div class="detail-item">
+            <h3>제목:</h3>
+            <p id="detail-title"></p>
+          </div>
+          <div class="detail-item">
+            <h3>금액:</h3>
+            <p id="detail-amount"></p>
+          </div>
+          <div class="detail-item">
+            <h3>날짜:</h3>
+            <p id="detail-date"></p>
+          </div>
+          <div class="detail-item">
+            <h3>카테고리:</h3>
+            <p id="detail-category"></p>
+          </div>
+          <div class="detail-item">
+            <h3>결제수단:</h3>
+            <p id="detail-payment"></p>
+          </div>
+        </div>
       </div>
     </div>
 
