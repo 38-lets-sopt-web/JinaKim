@@ -46,9 +46,11 @@ const renderExpenses = (expenseArray) => {
     const checkTd = document.createElement("td");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+    checkbox.classList.add("expense-checkbox");
 
     checkTd.appendChild(checkbox);
     tr.appendChild(checkTd);
+
     tr.dataset.id = expense.id;
 
     const titleTd = createCell(expense.title);
@@ -154,14 +156,52 @@ const resetFiltering = () => {
 applyButton.addEventListener("click", applyFiltering);
 resetButton.addEventListener("click", resetFiltering);
 
+// 날짜 순으로 정렬
+const sortSelector = document.querySelector("#sort");
+
+sortSelector.addEventListener("change", () => {
+  currentSortType = sortSelector.value;
+  renderFilteredAndSortedExpenses();
+});
+
 //삭제 기능
 const deleteButton = document.querySelector("#delete-button");
+const selectAllCheckbox = document.querySelector("#select-all-checkbox");
+
+/** 전체 체크박스 토글 */
+const toggleAllCheckbox = () => {
+  const expenseCheckboxes = document.querySelectorAll(".expense-checkbox");
+
+  expenseCheckboxes.forEach((checkbox) => {
+    checkbox.checked = selectAllCheckbox.checked;
+  });
+};
+
+/** 개별 체크박스 기준으로 업데이트하는 함수 */
+const updateSelectAllCheckbox = () => {
+  const expenseCheckboxes = document.querySelectorAll(".expense-checkbox");
+
+  const isAllChecked =
+    expenseCheckboxes.length > 0 &&
+    Array.from(expenseCheckboxes).every((checkbox) => checkbox.checked);
+
+  selectAllCheckbox.checked = isAllChecked;
+};
+
+//체크박스 변경 감지
+expenseList.addEventListener("change", (event) => {
+  if (!event.target.classList.contains("expense-checkbox")) {
+    return;
+  }
+
+  updateSelectAllCheckbox();
+});
+
+selectAllCheckbox.addEventListener("change", toggleAllCheckbox);
 
 /** 선택 삭제 함수 */
 const deletingExpenses = () => {
-  const checkedList = document.querySelectorAll(
-    'input[type="checkbox"]:checked',
-  );
+  const checkedList = document.querySelectorAll(".expense-checkbox:checked");
 
   const checkedIdList = Array.from(checkedList).map((checkbox) =>
     Number(checkbox.closest("tr").dataset.id),
@@ -173,6 +213,8 @@ const deletingExpenses = () => {
 
   localStorage.setItem("expenseData", JSON.stringify(storedExpenses));
   renderFilteredAndSortedExpenses();
+
+  selectAllCheckbox.checked = false;
 };
 
 deleteButton.addEventListener("click", deletingExpenses);
@@ -300,11 +342,3 @@ const handleExpenseTitleClick = (event) => {
 };
 
 expenseList.addEventListener("click", handleExpenseTitleClick);
-
-// 날짜 순으로 정렬
-const sortSelector = document.querySelector("#sort");
-
-sortSelector.addEventListener("change", () => {
-  currentSortType = sortSelector.value;
-  renderFilteredAndSortedExpenses();
-});
