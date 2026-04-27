@@ -79,7 +79,7 @@ const renderExpenses = (expenseArray) => {
 let storedExpenses = JSON.parse(localStorage.getItem("expenseData")) || [];
 let currentSortType = "desc";
 
-renderExpenses(sortByDateDesc(storedExpenses));
+renderExpenses(sortExpenses(storedExpenses));
 
 // 검색 필터링
 const titleInput = document.querySelector("#title");
