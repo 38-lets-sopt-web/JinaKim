@@ -1,8 +1,17 @@
+import GameBoardSection from "./components/gameBoardSection/GameBoardSection";
+import GameStatusSection from "./components/gameStatusSection/GameStatusSection";
+import Header from "./components/header/Header";
+import * as S from "./App.styles";
+
 function App() {
   return (
-    <>
-      <h1>반가워요</h1>
-    </>
+    <S.AppContainer>
+      <Header />
+      <S.MainContent>
+        <GameStatusSection />
+        <GameBoardSection />
+      </S.MainContent>
+    </S.AppContainer>
   );
 }
 
