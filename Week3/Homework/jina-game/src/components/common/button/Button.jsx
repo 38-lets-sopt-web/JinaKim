@@ -1,7 +1,11 @@
 import * as S from "./Button.styles";
 
-const Button = ({ children }) => {
-  return <S.Container>{children}</S.Container>;
+const Button = ({ children, type = "button", ...props }) => {
+  return (
+    <S.Container type={type} {...props}>
+      {children}
+    </S.Container>
+  );
 };
 
 export default Button;

@@ -6,9 +6,3 @@ export const AppContainer = styled.div`
   gap: 30px;
   margin: 20px 50px;
 `;
-
-export const MainContent = styled.main`
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-`;
