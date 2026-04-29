@@ -19,13 +19,3 @@ export const HoleContainer = styled.div`
   margin: 0 auto;
   padding: 15px;
 `;
-export const Hole = styled.div`
-  border-radius: 50%;
-  background-color: ${Colors.Main40};
-  overflow: hidden;
-`;
-
-export const ItemImg = styled.img`
-  width: 100%;
-  height: 100%;
-`;

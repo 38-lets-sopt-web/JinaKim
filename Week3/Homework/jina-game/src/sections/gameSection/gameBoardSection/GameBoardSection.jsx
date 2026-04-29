@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BoardArea from "./boardArea/BoardArea";
 import Button from "./../../../components/common/button/Button";
 import * as S from "./GameBoardSection.styles";
@@ -10,20 +10,32 @@ const LEVEL_SIZE = {
 };
 
 const LEVEL_TIME = {
-  1: 15,
-  2: 20,
-  3: 30,
+  1: 150,
+  2: 200,
+  3: 300,
 };
 
-const GameBoardSection = ({ level, setLevel, setTimeLeft }) => {
+const GameBoardSection = ({
+  level,
+  totalCount,
+  setLevel,
+  setTimeLeft,
+  onClickItem,
+  onResetGame,
+}) => {
   const [currentItem, setCurrentItem] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const itemIntervalRef = useRef(null);
   const timerIntervalRef = useRef(null);
+  const totalCountRef = useRef(totalCount);
 
   const size = LEVEL_SIZE[level];
   const holeCount = size * size;
+
+  useEffect(() => {
+    totalCountRef.current = totalCount;
+  }, [totalCount]);
 
   // 레벨 선택
   const handleLevelChange = (e) => {
@@ -45,6 +57,38 @@ const GameBoardSection = ({ level, setLevel, setTimeLeft }) => {
     });
   };
 
+  // 게임 정리 (타이머, 랜덤 아이템 정리)
+  const clearGameInterval = () => {
+    clearInterval(itemIntervalRef.current);
+    clearInterval(timerIntervalRef.current);
+
+    itemIntervalRef.current = null;
+    timerIntervalRef.current = null;
+
+    setCurrentItem(null);
+    setIsPlaying(false);
+  };
+
+  // 게임 중단
+  const handleStopGame = () => {
+    clearGameInterval();
+    onResetGame();
+  };
+
+  // 게임 종료
+  const handleEndGame = () => {
+    alert(`게임 종료! ${totalCountRef.current}점입니다`);
+
+    // 나중에 랭킹 저장
+    /*onSaveRanking({
+    level,
+    score: totalCountRef.current,
+  });*/
+
+    clearGameInterval();
+    onResetGame();
+  };
+
   // 게임 시작
   const handleStartGame = () => {
     if (itemIntervalRef.current) return;
@@ -59,33 +103,13 @@ const GameBoardSection = ({ level, setLevel, setTimeLeft }) => {
 
     timerIntervalRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(itemIntervalRef.current);
-          clearInterval(timerIntervalRef.current);
-
-          itemIntervalRef.current = null;
-          timerIntervalRef.current = null;
-
-          setCurrentItem(null);
-          setIsPlaying(false);
+        if (prevTime < 1) {
+          handleEndGame();
           return 0;
         }
         return prevTime - 1;
       });
-    }, 1000);
-  };
-
-  // 게임 중단
-  const handleStopGame = () => {
-    clearInterval(itemIntervalRef.current);
-    clearInterval(timerIntervalRef.current);
-
-    itemIntervalRef.current = null;
-    timerIntervalRef.current = null;
-
-    setCurrentItem(null);
-    setTimeLeft(LEVEL_TIME[level]);
-    setIsPlaying(false);
+    }, 100);
   };
 
   return (
@@ -105,7 +129,12 @@ const GameBoardSection = ({ level, setLevel, setTimeLeft }) => {
           <Button onClick={handleStopGame}>중단</Button>
         </S.Controls>
       </S.BoardHeader>
-      <BoardArea size={size} holeCount={holeCount} currentItem={currentItem} />
+      <BoardArea
+        size={size}
+        holeCount={holeCount}
+        currentItem={currentItem}
+        onClickItem={onClickItem}
+      />
     </S.Container>
   );
 };
