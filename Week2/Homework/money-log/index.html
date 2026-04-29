@@ -67,11 +67,7 @@
           >
             적용
           </button>
-          <button
-            id="filter-reset-button"
-            class="filtering-button"
-            type="reset"
-          >
+          <button id="filter-reset-button" class="filtering-button">
             초기화
           </button>
         </div>
@@ -123,8 +119,8 @@
     </main>
 
     <!-- 내역 추가 모달 -->
-    <div id="add-modal" class="modal hidden">
-      <div class="modal-content">
+    <div id="add-modal" role="dialog" class="modal hidden">
+      <form id="add-expense-form" class="modal-content">
         <header class="modal-header">
           <h2>내역 추가</h2>
           <button
@@ -192,11 +188,11 @@
         >
           추가
         </button>
-      </div>
+      </form>
     </div>
 
     <!-- 세부 내용 모달 -->
-    <div id="detail-modal" class="modal hidden">
+    <div id="detail-modal" role="dialog" class="modal hidden">
       <div class="modal-content">
         <header class="modal-header">
           <h2>항목 상세</h2>

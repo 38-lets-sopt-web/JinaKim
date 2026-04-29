@@ -1,7 +1,41 @@
-import { expenses } from "./mockData.js";
+import { filterExpenses, isExpense, isIncome } from "./filter.js";
+import "./mockData.js";
+import { closeModal, initModalEvents, openModal } from "./modal.js";
+import { createExpense, deleteExpensesByIds, getExpenses } from "./storage.js";
 
-//헤더 아이콘 클릭 시 새로고침
+// DOM 요소
 const headerIcon = document.querySelector("#header-icon");
+
+const totalAmount = document.querySelector("#total-amount");
+const expenseList = document.querySelector("#expense-list");
+
+const titleInput = document.querySelector("#title");
+const typeInput = document.querySelector("#type");
+const categoryInput = document.querySelector("#category");
+const paymentInput = document.querySelector("#payment");
+
+const applyButton = document.querySelector("#filter-apply-button");
+const resetButton = document.querySelector("#filter-reset-button");
+const sortSelector = document.querySelector("#sort");
+
+const deleteButton = document.querySelector("#delete-button");
+const selectAllCheckbox = document.querySelector("#select-all-checkbox");
+
+const addTitleInput = document.querySelector("#add-title-input");
+const addTypeInput = document.querySelector("#add-type-input");
+const addAmountInput = document.querySelector("#add-amount-input");
+const addDateInput = document.querySelector("#add-date-input");
+const addCategoryInput = document.querySelector("#add-category-input");
+const addPaymentInput = document.querySelector("#add-payment-input");
+const addExpenseForm = document.querySelector("#add-expense-form");
+
+const detailTitle = document.querySelector("#detail-title");
+const detailAmount = document.querySelector("#detail-amount");
+const detailDate = document.querySelector("#detail-date");
+const detailCategory = document.querySelector("#detail-category");
+const detailPayment = document.querySelector("#detail-payment");
+
+// 헤더 아이콘 클릭 시 새로고침
 headerIcon.addEventListener("click", () => window.location.reload());
 
 /** 셀 만들기 함수 */
@@ -30,13 +64,10 @@ const sortExpenses = (expenseArray) => {
   return sortByDateAsc(expenseArray);
 };
 
-//total 값 계산
-const totalAmount = document.querySelector("#total-amount");
-
 /** total 값 계산 함수 */
 const calTotalAmount = (expenses) => {
   return expenses.reduce((total, expense) => {
-    return (total += Number(expense.amount));
+    return total + Number(expense.amount);
   }, 0);
 };
 
@@ -44,12 +75,6 @@ const calTotalAmount = (expenses) => {
 const renderTotalAmount = (expenses) => {
   totalAmount.textContent = `${calTotalAmount(expenses).toLocaleString()}원`;
 };
-
-//표 만들기
-const isIncome = (expense) => expense.amount > 0;
-const isExpense = (expense) => expense.amount < 0;
-
-const expenseList = document.querySelector("#expense-list");
 
 /** 표 렌더링 함수 */
 const renderExpenses = (expenseArray) => {
@@ -94,20 +119,10 @@ const renderExpenses = (expenseArray) => {
   renderTotalAmount(expenseArray);
 };
 
-// localStorage의 데이터를 테이블에 렌더링
-let storedExpenses = JSON.parse(localStorage.getItem("expenseData")) || [];
+let storedExpenses = getExpenses();
 let currentSortType = "desc";
 
 renderExpenses(sortExpenses(storedExpenses));
-
-// 검색 필터링
-const titleInput = document.querySelector("#title");
-const typeInput = document.querySelector("#type");
-const categoryInput = document.querySelector("#category");
-const paymentInput = document.querySelector("#payment");
-
-const applyButton = document.querySelector("#filter-apply-button");
-const resetButton = document.querySelector("#filter-reset-button");
 
 /** 현재 필터 입력값을 가져오는 함수 */
 const getFilterValues = () => {
@@ -119,37 +134,10 @@ const getFilterValues = () => {
   };
 };
 
-/** 필터 조건 확인 함수 */
-const isMatchedFilter = (expense, filters) => {
-  const isMatchedKeyword =
-    filters.keyword === "" || expense.title.includes(filters.keyword);
-
-  const isMatchedType =
-    filters.type === "" ||
-    (filters.type === "수입" && isIncome(expense)) ||
-    (filters.type === "지출" && isExpense(expense));
-
-  const isMatchedCategory =
-    filters.category === "" || expense.category === filters.category;
-
-  const isMatchedPayment =
-    filters.payment === "" || expense.payment === filters.payment;
-
-  return (
-    isMatchedKeyword && isMatchedType && isMatchedCategory && isMatchedPayment
-  );
-};
-
-/** 필터링 된 배열을 반환하는 함수 */
-const filterExpenses = (expenseArray) => {
-  const filters = getFilterValues();
-
-  return expenseArray.filter((expense) => isMatchedFilter(expense, filters));
-};
-
 /** 필터와 정렬을 모두 적용하여 렌더링하는 함수 */
 const renderFilteredAndSortedExpenses = () => {
-  const filteredExpenses = filterExpenses(storedExpenses);
+  const filters = getFilterValues();
+  const filteredExpenses = filterExpenses(storedExpenses, filters);
   const sortedExpenses = sortExpenses(filteredExpenses);
 
   renderExpenses(sortedExpenses);
@@ -173,17 +161,10 @@ const resetFiltering = () => {
 applyButton.addEventListener("click", applyFiltering);
 resetButton.addEventListener("click", resetFiltering);
 
-// 날짜 순으로 정렬
-const sortSelector = document.querySelector("#sort");
-
 sortSelector.addEventListener("change", () => {
   currentSortType = sortSelector.value;
   renderFilteredAndSortedExpenses();
 });
-
-//삭제 기능
-const deleteButton = document.querySelector("#delete-button");
-const selectAllCheckbox = document.querySelector("#select-all-checkbox");
 
 /** 전체 체크박스 토글 */
 const toggleAllCheckbox = () => {
@@ -205,7 +186,6 @@ const updateSelectAllCheckbox = () => {
   selectAllCheckbox.checked = isAllChecked;
 };
 
-//체크박스 변경 감지
 expenseList.addEventListener("change", (event) => {
   if (!event.target.classList.contains("expense-checkbox")) {
     return;
@@ -217,72 +197,28 @@ expenseList.addEventListener("change", (event) => {
 selectAllCheckbox.addEventListener("change", toggleAllCheckbox);
 
 /** 선택 삭제 함수 */
-const deletingExpenses = () => {
+const deleteExpenses = () => {
   const checkedList = document.querySelectorAll(".expense-checkbox:checked");
 
   const checkedIdList = Array.from(checkedList).map((checkbox) =>
     Number(checkbox.closest("tr").dataset.id),
   );
 
-  storedExpenses = storedExpenses.filter(
-    (expense) => !checkedIdList.includes(expense.id),
-  );
+  deleteExpensesByIds(checkedIdList);
+  storedExpenses = getExpenses();
 
-  localStorage.setItem("expenseData", JSON.stringify(storedExpenses));
   renderFilteredAndSortedExpenses();
-
   selectAllCheckbox.checked = false;
 };
 
-deleteButton.addEventListener("click", deletingExpenses);
+deleteButton.addEventListener("click", deleteExpenses);
 
-// 모달 공통
-const openModal = (modalId) => {
-  const modal = document.querySelector(`#${modalId}`);
-  modal.classList.remove("hidden");
-};
-
-const closeModal = (modalId) => {
-  const modal = document.querySelector(`#${modalId}`);
-  modal.classList.add("hidden");
-};
-
-const modalOpenButtons = document.querySelectorAll("[data-modal-open]");
-const modalCloseButtons = document.querySelectorAll("[data-modal-close]");
-const modals = document.querySelectorAll(".modal");
-
-modalOpenButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    openModal(button.dataset.modalOpen);
-  });
-});
-
-modalCloseButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    closeModal(button.dataset.modalClose);
-  });
-});
-
-modals.forEach((modal) => {
-  modal.addEventListener("click", (event) => {
-    if (event.target === modal) {
-      closeModal(modal.id);
-    }
-  });
-});
-
-//내역 추가 모달 구현
-const addTitleInput = document.querySelector("#add-title-input");
-const addTypeInput = document.querySelector("#add-type-input");
-const addAmountInput = document.querySelector("#add-amount-input");
-const addDateInput = document.querySelector("#add-date-input");
-const addCategoryInput = document.querySelector("#add-category-input");
-const addPaymentInput = document.querySelector("#add-payment-input");
-
-const addExpenseBtn = document.querySelector("#add-expense-button");
+initModalEvents();
 
 /** 내역 추가 함수 */
-const addExpense = () => {
+const addExpense = (event) => {
+  event.preventDefault();
+
   if (
     !addTitleInput.value ||
     !addTypeInput.value ||
@@ -310,20 +246,16 @@ const addExpense = () => {
     payment: addPaymentInput.value,
   };
 
-  storedExpenses.push(newExpense);
-  localStorage.setItem("expenseData", JSON.stringify(storedExpenses));
+  createExpense(newExpense);
+  storedExpenses = getExpenses();
+
   renderFilteredAndSortedExpenses();
   closeModal("add-modal");
+
+  addExpenseForm.reset();
 };
 
-addExpenseBtn.addEventListener("click", addExpense);
-
-//세부 내용 모달 구현
-const detailTitle = document.querySelector("#detail-title");
-const detailAmount = document.querySelector("#detail-amount");
-const detailDate = document.querySelector("#detail-date");
-const detailCategory = document.querySelector("#detail-category");
-const detailPayment = document.querySelector("#detail-payment");
+addExpenseForm.addEventListener("submit", addExpense);
 
 /** 세부 모달 열기 */
 const openDetailModal = (expense) => {
