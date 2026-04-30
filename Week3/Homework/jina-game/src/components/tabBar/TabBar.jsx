@@ -1,20 +1,17 @@
-import { useState } from "react";
 import * as S from "./TabBar.styles";
 
-const TabBar = () => {
-  const [selectedTab, setSelectedTab] = useState("game");
-
+const TabBar = ({ selectedTab, onSelectTab }) => {
   return (
     <S.Container>
       <S.TabItem
         $isSelected={selectedTab === "game"}
-        onClick={() => setSelectedTab("game")}
+        onClick={() => onSelectTab("game")}
       >
         게임
       </S.TabItem>
       <S.TabItem
         $isSelected={selectedTab === "ranking"}
-        onClick={() => setSelectedTab("ranking")}
+        onClick={() => onSelectTab("ranking")}
       >
         랭킹
       </S.TabItem>

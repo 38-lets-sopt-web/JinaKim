@@ -16,32 +16,42 @@ const ITEM_IMAGE = {
 };
 
 const Hole = ({ index, currentItem, onClickItem }) => {
+  const [isCatched, setIsCatched] = useState(false);
+  const [hiddenItem, setHiddenItem] = useState(null);
+
   const isVisible = currentItem?.index === index;
   const itemInfo = ITEM_IMAGE[currentItem?.type];
-
-  const [isCatched, setIsCatched] = useState(false);
+  const isHidden = hiddenItem === currentItem;
 
   const handleClick = () => {
-    if (!isVisible || !currentItem) return;
+    if (isCatched || isHidden || !isVisible || !currentItem) return;
 
     onClickItem(currentItem.type);
 
     if (currentItem.type === "mole") {
       setIsCatched(true);
+
       setTimeout(() => {
         setIsCatched(false);
-        //setIsHidden(true);
+        setHiddenItem(currentItem);
       }, 700);
+
+      return;
+    }
+
+    if (currentItem.type === "bomb") {
+      setHiddenItem(currentItem);
     }
   };
 
   return (
     <S.Hole onClick={handleClick}>
-      {isVisible && itemInfo && (
-        <S.ItemImg
-          src={isCatched ? catchtedMoleImg : itemInfo.src}
-          alt={isCatched ? "잡힌 두더지 이미지" : itemInfo.alt}
-        />
+      {isCatched && (
+        <S.ItemImg src={catchtedMoleImg} alt="잡힌 두더지 이미지" />
+      )}
+
+      {!isCatched && !isHidden && isVisible && itemInfo && (
+        <S.ItemImg src={itemInfo.src} alt={itemInfo.alt} />
       )}
     </S.Hole>
   );

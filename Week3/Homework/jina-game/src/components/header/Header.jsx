@@ -1,12 +1,11 @@
-//import Button from "../common/button/Button";
 import TabBar from "../tabBar/TabBar";
 import * as S from "./Header.styles";
 
-const Header = () => {
+const Header = ({ selectedTab, onSelectTab }) => {
   return (
     <S.Container>
       <S.Title>두더지게임</S.Title>
-      <TabBar />
+      <TabBar selectedTab={selectedTab} onSelectTab={onSelectTab} />
     </S.Container>
   );
 };

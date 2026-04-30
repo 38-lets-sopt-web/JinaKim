@@ -15,14 +15,17 @@ const GameSection = () => {
 
   const [successCount, setSuccessCount] = useState(0);
   const [failCount, setFailCount] = useState(0);
+  const [status, setStatus] = useState("");
 
   const handleClickItem = (type) => {
     if (type === "mole") {
       setSuccessCount((prev) => prev + 1);
+      setStatus("성공");
       return;
     }
     if (type === "bomb") {
       setFailCount((prev) => prev + 1);
+      setStatus("실패");
     }
   };
 
@@ -31,6 +34,7 @@ const GameSection = () => {
     setTimeLeft(LEVEL_TIME[level]);
     setSuccessCount(0);
     setFailCount(0);
+    setStatus("");
   };
 
   return (
@@ -40,6 +44,7 @@ const GameSection = () => {
         totalCount={successCount - failCount}
         successCount={successCount}
         failCount={failCount}
+        status={status}
       />
       <GameBoardSection
         level={level}

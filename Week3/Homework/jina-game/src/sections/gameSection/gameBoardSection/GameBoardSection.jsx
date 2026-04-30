@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import BoardArea from "./boardArea/BoardArea";
 import Button from "./../../../components/common/button/Button";
 import * as S from "./GameBoardSection.styles";
+import { saveGameRecord } from "../../../utils/gameStorage";
 
 const LEVEL_SIZE = {
   1: 2,
@@ -28,6 +29,7 @@ const GameBoardSection = ({
 
   const itemIntervalRef = useRef(null);
   const timerIntervalRef = useRef(null);
+  const timeLeftRef = useRef(LEVEL_TIME[level]);
   const totalCountRef = useRef(totalCount);
 
   const size = LEVEL_SIZE[level];
@@ -79,11 +81,14 @@ const GameBoardSection = ({
   const handleEndGame = () => {
     alert(`게임 종료! ${totalCountRef.current}점입니다`);
 
-    // 나중에 랭킹 저장
-    /*onSaveRanking({
-    level,
-    score: totalCountRef.current,
-  });*/
+    const newRecord = {
+      id: crypto.randomUUID(),
+      level: level,
+      score: totalCountRef.current,
+      date: new Date().toISOString(),
+    };
+
+    saveGameRecord(newRecord);
 
     clearGameInterval();
     onResetGame();
@@ -92,8 +97,9 @@ const GameBoardSection = ({
   // 게임 시작
   const handleStartGame = () => {
     if (itemIntervalRef.current) return;
+    timeLeftRef.current = LEVEL_TIME[level];
 
-    setTimeLeft(LEVEL_TIME[level]);
+    setTimeLeft(timeLeftRef.current);
     generateRandomItem();
     setIsPlaying(true);
 
@@ -102,13 +108,19 @@ const GameBoardSection = ({
     }, 1000);
 
     timerIntervalRef.current = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime < 1) {
+      timeLeftRef.current -= 1;
+
+      if (timeLeftRef.current <= 0) {
+        setTimeLeft(0);
+
+        setTimeout(() => {
           handleEndGame();
-          return 0;
-        }
-        return prevTime - 1;
-      });
+        }, 0);
+
+        return;
+      }
+
+      setTimeLeft(timeLeftRef.current);
     }, 100);
   };
 
