@@ -2,12 +2,7 @@ import GameBoardSection from "./gameBoardSection/GameBoardSection";
 import GameStatusSection from "./gameStatusSection/GameStatusSection";
 import * as S from "./GameSection.styles";
 import { useState } from "react";
-
-const LEVEL_TIME = {
-  1: 150,
-  2: 200,
-  3: 300,
-};
+import { LEVEL_TIME } from "../../constants/gameConstants";
 
 const GameSection = () => {
   const [level, setLevel] = useState(1);

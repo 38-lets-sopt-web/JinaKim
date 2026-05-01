@@ -3,18 +3,7 @@ import BoardArea from "./boardArea/BoardArea";
 import Button from "./../../../components/common/button/Button";
 import * as S from "./GameBoardSection.styles";
 import { saveGameRecord } from "../../../utils/gameStorage";
-
-const LEVEL_SIZE = {
-  1: 2,
-  2: 3,
-  3: 4,
-};
-
-const LEVEL_TIME = {
-  1: 150,
-  2: 200,
-  3: 300,
-};
+import { LEVEL_SIZE, LEVEL_TIME } from "../../../constants/gameConstants";
 
 const GameBoardSection = ({
   level,
