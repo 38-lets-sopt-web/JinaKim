@@ -94,7 +94,7 @@ const renderExpenses = (expenseArray) => {
     tr.dataset.id = expense.id;
 
     const titleTd = createCell(expense.title);
-    const amountTd = createCell(expense.amount);
+    const amountTd = createCell(expense.amount.toLocaleString());
     const dateTd = createCell(expense.date);
     const categoryTd = createCell(expense.category);
     const paymentTd = createCell(expense.payment);
@@ -260,7 +260,7 @@ addExpenseForm.addEventListener("submit", addExpense);
 /** 세부 모달 열기 */
 const openDetailModal = (expense) => {
   detailTitle.textContent = expense.title;
-  detailAmount.textContent = `${expense.amount}원`;
+  detailAmount.textContent = `${expense.amount.toLocaleString()}원`;
   detailDate.textContent = expense.date;
   detailCategory.textContent = expense.category;
   detailPayment.textContent = expense.payment;
