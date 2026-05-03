@@ -1,0 +1,293 @@
+/* reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+p,
+table,
+thead,
+tbody,
+tfoot,
+tr,
+th,
+td {
+  margin: 0;
+  padding: 0;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* base */
+body {
+  background-color: gainsboro;
+}
+
+/* layout */
+.main-header {
+  display: flex;
+  align-items: center;
+  background-color: rgb(1, 1, 67);
+  color: white;
+}
+
+.main-header > div {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-icon {
+  cursor: pointer;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 75%;
+  margin: 30px auto;
+}
+
+.search-filter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 15px;
+}
+
+.search-area {
+  grid-column: 1/7;
+  display: flex;
+  gap: 50px;
+  align-items: center;
+}
+
+.search-bar {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid lightgray;
+  border-radius: 5px;
+}
+
+.sub-filtering {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sub-filtering > label {
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.sub-filtering > select {
+  flex: 1;
+  min-width: 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid lightgray;
+}
+
+.filtering-button {
+  grid-column: span 3;
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: black;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/*표 부분 본문 스타일링*/
+.content-box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.control-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sort {
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid lightgray;
+}
+
+.control-button-area {
+  display: flex;
+  gap: 5px;
+}
+
+.control-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+}
+
+.money-log-table {
+  width: 100%;
+}
+
+.money-log-table thead th {
+  background-color: aliceblue;
+  border-bottom: 2px solid lightgray;
+}
+
+.money-log-table th,
+.money-log-table td {
+  padding: 10px;
+  border-bottom: 1px solid lightgray;
+  text-align: center;
+}
+
+.expense-title {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.money-log-table tfoot td {
+  background-color: aliceblue;
+  border-top: 2px solid lightgray;
+  border-bottom: none;
+}
+
+.income {
+  color: blue;
+}
+
+.expense {
+  color: red;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  width: 450px;
+  background-color: white;
+  border-radius: 20px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-button {
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.add-content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.content-input {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.content-input > input {
+  padding: 8px;
+  border: 2px solid lightgray;
+  border-radius: 5px;
+}
+
+.content-input > select {
+  padding: 8px;
+  border: 2px solid lightgray;
+  border-radius: 5px;
+}
+
+.title-area,
+.date-area {
+  grid-column: span 2;
+}
+
+.add-expense-button {
+  width: fit-content;
+}
+
+.detail-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-item {
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid lightgray;
+}
+
+.detail-item > h3 {
+  width: 100px;
+  font-size: 1rem;
+  color: gray;
+}
+
+/* utilities */
+
+/*화면 상엔 안보이지만 스크린리더만 인식할 수 있도록 하는 범용적인 스타일링*/
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hidden {
+  display: none;
+}
