@@ -18,7 +18,6 @@ export const BoardHeader = styled.header`
 
 export const LevelSelect = styled.select`
   padding: 0 10px;
-  border: none;
   border-radius: 5px;
   background-color: ${Colors.Main20};
   font-weight: 600;

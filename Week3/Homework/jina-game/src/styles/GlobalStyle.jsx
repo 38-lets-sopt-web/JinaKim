@@ -27,17 +27,25 @@ const GlobalStyle = () => {
         body,
         h1,
         h2,
-        h3,
         p,
-        button {
+        button,
+        table,
+        th,
+        td {
           margin: 0;
+          padding: 0;
         }
 
-        button {
-          padding: 0;
+        button,
+        select {
           border: none;
           background: none;
           cursor: pointer;
+        }
+
+        table {
+          border-collapse: collapse;
+          border-spacing: 0;
         }
       `}
     />
