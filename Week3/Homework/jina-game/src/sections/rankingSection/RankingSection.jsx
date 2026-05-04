@@ -8,6 +8,10 @@ const RankingSection = () => {
   const [gameRecords, setGameRecords] = useState(getGameRecords());
 
   const resetRecords = () => {
+    const isConfirmed = window.confirm("정말 랭킹 기록을 초기화하시겠습니까?");
+
+    if (!isConfirmed) return;
+
     removeGameRecords();
     setGameRecords([]);
   };

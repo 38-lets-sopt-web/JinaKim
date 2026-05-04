@@ -1,8 +1,14 @@
 import * as S from "./RankingTable.styles";
 
 const RankingTable = ({ gameRecords }) => {
-  const sortByScore = (records) => {
-    return [...records].sort((a, b) => b.score - a.score);
+  const sortByLevelAndScore = (records) => {
+    return [...records].sort((a, b) => {
+      if (b.level !== a.level) {
+        return b.level - a.level;
+      }
+
+      return b.score - a.score;
+    });
   };
 
   return (
@@ -16,7 +22,7 @@ const RankingTable = ({ gameRecords }) => {
         </tr>
       </S.TableHead>
       <tbody>
-        {sortByScore(gameRecords).map((record, index) => {
+        {sortByLevelAndScore(gameRecords).map((record, index) => {
           return (
             <tr key={record.id}>
               <td>{index + 1}</td>

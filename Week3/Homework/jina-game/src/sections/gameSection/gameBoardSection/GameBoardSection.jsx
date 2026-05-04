@@ -4,6 +4,7 @@ import Button from "./../../../components/common/button/Button";
 import * as S from "./GameBoardSection.styles";
 import { saveGameRecord } from "../../../utils/gameStorage";
 import { LEVEL_SIZE, LEVEL_TIME } from "../../../constants/gameConstants";
+import GameOverModal from "../../../components/gameOverModal/GameOverModal";
 
 const GameBoardSection = ({
   level,
@@ -15,6 +16,9 @@ const GameBoardSection = ({
 }) => {
   const [currentItem, setCurrentItem] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [finalScore, setFinalScore] = useState(0);
 
   const itemIntervalRef = useRef(null);
   const timerIntervalRef = useRef(null);
@@ -68,19 +72,26 @@ const GameBoardSection = ({
 
   // 게임 종료
   const handleEndGame = () => {
-    alert(`게임 종료! ${totalCountRef.current}점입니다`);
+    const score = totalCountRef.current;
+
+    setFinalScore(score);
+    setIsModalOpen(true);
 
     const newRecord = {
       id: crypto.randomUUID(),
-      level: level,
-      score: totalCountRef.current,
+      level,
+      score,
       date: new Date().toISOString(),
     };
 
     saveGameRecord(newRecord);
 
     clearGameInterval();
-    onResetGame();
+
+    setTimeout(() => {
+      setIsModalOpen(false);
+      onResetGame();
+    }, 2000);
   };
 
   // 게임 시작
@@ -114,29 +125,39 @@ const GameBoardSection = ({
   };
 
   return (
-    <S.Container aria-label="게임 메인 보드">
-      <S.BoardHeader>
-        <S.LevelSelect
-          disabled={isPlaying}
-          value={level}
-          onChange={handleLevelChange}
-        >
-          <option value={1}>Level 1</option>
-          <option value={2}>Level 2</option>
-          <option value={3}>Level 3</option>
-        </S.LevelSelect>
-        <S.Controls>
-          <Button onClick={handleStartGame}>시작</Button>
-          <Button onClick={handleStopGame}>중단</Button>
-        </S.Controls>
-      </S.BoardHeader>
-      <BoardArea
-        size={size}
-        holeCount={holeCount}
-        currentItem={currentItem}
-        onClickItem={onClickItem}
-      />
-    </S.Container>
+    <>
+      <S.Container aria-label="게임 메인 보드">
+        <S.BoardHeader>
+          <S.LevelSelect
+            disabled={isPlaying}
+            value={level}
+            onChange={handleLevelChange}
+          >
+            <option value={1}>Level 1</option>
+            <option value={2}>Level 2</option>
+            <option value={3}>Level 3</option>
+          </S.LevelSelect>
+          <S.Controls>
+            <Button onClick={handleStartGame}>시작</Button>
+            <Button onClick={handleStopGame}>중단</Button>
+          </S.Controls>
+        </S.BoardHeader>
+        <BoardArea
+          size={size}
+          holeCount={holeCount}
+          currentItem={currentItem}
+          onClickItem={onClickItem}
+        />
+      </S.Container>
+
+      {isModalOpen && (
+        <GameOverModal
+          level={level}
+          score={finalScore}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
+    </>
   );
 };
 
