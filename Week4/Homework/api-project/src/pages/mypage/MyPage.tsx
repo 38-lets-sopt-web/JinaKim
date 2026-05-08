@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import AuthFormLayout from "../../components/auth/authFormLayout/AuthFormLayout";
 import {
   ErrorMessage,
@@ -7,7 +7,7 @@ import {
 import Button from "../../components/common/button/Button";
 import InputField from "../../components/common/input/inputField/InputField";
 import InfoCard from "../../components/mypage/InfoCard/InfoCard";
-import { getMyInfo, patchMyInfo } from "../../apis/user";
+import { patchMyInfo } from "../../apis/user";
 import { type EditInfoRequestData, type UserInfo } from "../../types/userType";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,12 +15,10 @@ import {
   editInfoSchema,
   type EditInfoFormData,
 } from "../../schemas/editInfoSchema";
+import { useOutletContext } from "react-router";
 
 const MyPage = () => {
-  const storedUserId = localStorage.getItem("userId");
-  const userId = storedUserId ? Number(storedUserId) : null;
-
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const userInfo = useOutletContext<UserInfo>();
 
   const {
     register,
@@ -38,29 +36,15 @@ const MyPage = () => {
   });
 
   useEffect(() => {
-    if (!userId) return;
-
-    const fetchData = async () => {
-      const data = await getMyInfo(userId);
-
-      setUserInfo(data);
-
-      reset({
-        name: data.name,
-        email: data.email,
-        age: data.age,
-      });
-    };
-
-    fetchData();
-  }, [userId, reset]);
-
-  if (!userInfo) return null;
+    reset({
+      name: userInfo.name,
+      email: userInfo.email,
+      age: userInfo.age,
+    });
+  }, [userInfo, reset]);
 
   const onSubmit = async (data: EditInfoRequestData) => {
-    if (!userId) return;
-
-    const res = await patchMyInfo(userId, data);
+    const res = await patchMyInfo(userInfo.id, data);
     if (res) {
       alert("정보 저장에 성공하셨습니다.");
     }

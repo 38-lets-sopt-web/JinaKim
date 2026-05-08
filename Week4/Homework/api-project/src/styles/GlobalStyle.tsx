@@ -41,7 +41,14 @@ const GlobalStyle = () => {
           cursor: pointer;
         }
 
-        input,
+        input {
+          border: none;
+          outline: none;
+          background: none;
+          appearance: none;
+          color: inherit;
+        }
+
         select {
           color: inherit;
         }

@@ -1,7 +1,11 @@
 import { Link, useNavigate } from "react-router";
 import * as S from "./Header.styles";
 
-const Header = () => {
+interface HeaderProps {
+  name: string;
+}
+
+const Header = ({ name }: HeaderProps) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -13,7 +17,7 @@ const Header = () => {
     <S.Container>
       <S.TitleAndGreet>
         <S.Title>SOPT MEMBERS</S.Title>
-        <S.Greet>안녕하세요, {}님!</S.Greet>
+        <S.Greet>안녕하세요, {name}님!</S.Greet>
       </S.TitleAndGreet>
       <S.Nav>
         <Link to="/mypage">내 정보</Link>
