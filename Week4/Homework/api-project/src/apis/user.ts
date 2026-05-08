@@ -56,14 +56,13 @@ export const getMyInfo = async (userId: number) => {
   try {
     const res = await api.get(`/api/v1/users/${userId}`);
     if (res.data.success) {
-      console.log(res.data.data);
       return res.data.data;
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data?.message) {
       alert(error.response.data.message);
     } else {
-      alert("로그인 중 오류가 발생했습니다.");
+      alert("정보 조회 중 오류가 발생했습니다.");
     }
   }
 };
@@ -80,14 +79,13 @@ export const patchMyInfo = async (
   try {
     const res = await api.patch(`/api/v1/users/${userId}`, data);
     if (res.data.success) {
-      console.log(res.data);
       return res.data.data;
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data?.message) {
       alert(error.response.data.message);
     } else {
-      alert("로그인 중 오류가 발생했습니다.");
+      alert("정보 수정에 오류가 발생했습니다.");
     }
   }
 };
@@ -100,14 +98,13 @@ export const getUsers = async () => {
   try {
     const res = await api.get("/api/v1/users");
     if (res.data.success) {
-      console.log(res.data.data);
       return res.data.data;
     }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data?.message) {
       alert(error.response.data.message);
     } else {
-      alert("로그인 중 오류가 발생했습니다.");
+      alert("목록 조회 중 오류가 발생했습니다.");
     }
   }
 };

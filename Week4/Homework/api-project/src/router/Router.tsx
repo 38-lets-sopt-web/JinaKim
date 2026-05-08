@@ -15,7 +15,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, Component: MyPage },
       { path: "members", Component: Members },
-      { path: "members/:memberId", Component: MemberDetail },
+      { path: "members/:userId", Component: MemberDetail },
     ],
   },
 ]);

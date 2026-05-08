@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import AuthFormLayout from "../../components/auth/authFormLayout/AuthFormLayout";
 import SignupID from "./components/SignupID";
 import { useState } from "react";
@@ -15,6 +15,7 @@ import { postUser } from "../../apis/user";
 const Signup = () => {
   const [step, setStep] = useState(1);
   const [signupData, setSignupData] = useState<Partial<SignupFormData>>({});
+  const navigate = useNavigate();
 
   const handleNextIdStep = (data: SignupIDFormData) => {
     setSignupData((prev) => ({
@@ -54,7 +55,11 @@ const Signup = () => {
       part: finalSignupData.part,
     };
 
-    await postUser(requestBody);
+    const res = await postUser(requestBody);
+    if (res) {
+      alert(`${finalSignupData.name}님 환영합니다!`);
+      navigate("/login");
+    }
   };
 
   return (

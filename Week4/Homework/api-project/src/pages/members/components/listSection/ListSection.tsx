@@ -21,7 +21,7 @@ const ListSection = () => {
       <S.SectionTitle>전체 멤버 리스트</S.SectionTitle>
       <S.ListContainer>
         {userList.map((user) => (
-          <MemberCard key={user.id} name={user.name} part={user.part} />
+          <MemberCard key={user.id} user={user} />
         ))}
       </S.ListContainer>
     </S.Container>

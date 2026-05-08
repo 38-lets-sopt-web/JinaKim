@@ -1,15 +1,18 @@
+import { useNavigate } from "react-router";
 import * as S from "./MemberCard.styles";
+import type { UserItem } from "../../../../../types/userType";
 
 interface MemberCardProps {
-  name: string;
-  part: string;
+  user: UserItem;
 }
 
-const MemberCard = ({ name, part }: MemberCardProps) => {
+const MemberCard = ({ user }: MemberCardProps) => {
+  const navigate = useNavigate();
+
   return (
-    <S.Container>
-      <S.Name>{name}</S.Name>
-      <S.Part>{part}</S.Part>
+    <S.Container onClick={() => navigate(`${user.id}`)}>
+      <S.Name>{user.name}</S.Name>
+      <S.Part>{user.part}</S.Part>
     </S.Container>
   );
 };
