@@ -1,7 +1,14 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import * as S from "./Header.styles";
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    navigate("/login");
+  };
+
   return (
     <S.Container>
       <S.TitleAndGreet>
@@ -11,7 +18,9 @@ const Header = () => {
       <S.Nav>
         <Link to="/mypage">내 정보</Link>
         <Link to="/mypage/members">회원 조회</Link>
-        <Link to="/login">로그아웃</Link>
+        <button type="button" onClick={handleLogout}>
+          로그아웃
+        </button>
       </S.Nav>
     </S.Container>
   );

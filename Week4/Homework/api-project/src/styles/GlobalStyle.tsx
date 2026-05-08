@@ -35,6 +35,7 @@ const GlobalStyle = () => {
         }
 
         button {
+          color: ${theme.colors.white};
           background-color: transparent;
           border: none;
           cursor: pointer;
