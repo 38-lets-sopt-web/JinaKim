@@ -19,7 +19,10 @@ const GlobalStyle = () => {
         body,
         h1,
         h2,
-        p {
+        p,
+        ul,
+        input,
+        button {
           margin: 0;
           padding: 0;
         }
@@ -27,6 +30,24 @@ const GlobalStyle = () => {
         a {
           color: inherit;
           text-decoration: none;
+        }
+
+        button {
+          background-color: transparent;
+          border: none;
+          cursor: pointer;
+        }
+
+        input {
+          border: none;
+          outline: none;
+          background: none;
+          appearance: none;
+          color: inherit;
+        }
+
+        select {
+          color: inherit;
         }
       `}
     />
