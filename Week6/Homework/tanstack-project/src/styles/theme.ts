@@ -27,11 +27,10 @@ const theme = {
   },
 
   fontSizes: {
-    xs: "1.2rem", // 태그, 날짜, 부가 정보
-    sm: "1.4rem", // 카드 설명, 본문
-    md: "1.6rem", // 기본 텍스트
-    lg: "2rem", // 섹션 제목
-    xl: "2.8rem", // 페이지 제목, 영화 상세 제목
+    sm: "0.8rem",
+    md: "1.0rem",
+    lg: "1.6rem",
+    xl: "2rem",
   },
 
   fontWeights: {
