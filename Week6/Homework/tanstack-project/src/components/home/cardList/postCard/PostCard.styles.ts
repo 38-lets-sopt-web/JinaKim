@@ -8,6 +8,12 @@ export const Container = styled.article`
   border-radius: ${theme.radius.md};
   width: 100%;
   height: 400px;
+
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
 `;
 
 export const CardLink = styled(Link)`
