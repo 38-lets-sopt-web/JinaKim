@@ -1,27 +1,77 @@
+import {
+  TMDB_BACKDROP_BASE_URL,
+  TMDB_POSTER_BASE_URL,
+} from "@/constants/image";
 import EXImg from "@assets/images/exImg.jpg";
 import * as S from "./PostMainSection.styles";
 
-const genres = ["가족", "코미디", "모험", "판타지", "애니메이션"];
+interface PostMainSectionProps {
+  title: string;
+  releaseDate: string;
+  genres: {
+    id: number;
+    name: string;
+  }[];
+  backdropPath: string | null;
+  posterPath: string | null;
+  voteAverage: number;
+  voteCount: number;
+  runtime: number | null;
+  status: string;
+}
 
-const movieStats = [
-  { label: "평점", value: "7.6 / 10" },
-  { label: "투표 수", value: "1,378" },
-  { label: "상영 시간", value: "1시간 39분" },
-  { label: "상태", value: "Released" },
-];
+const formatReleaseDate = (releaseDate: string) => {
+  return releaseDate ? releaseDate.replaceAll("-", ".") : "개봉일 정보 없음";
+};
 
-const PostMainSection = () => {
+const formatRuntime = (runtime: number | null) => {
+  if (!runtime) return "상영 시간 정보 없음";
+
+  const hours = Math.floor(runtime / 60);
+  const minutes = runtime % 60;
+
+  if (hours === 0) return `${minutes}분`;
+
+  return `${hours}시간 ${minutes}분`;
+};
+
+const PostMainSection = ({
+  title,
+  releaseDate,
+  genres,
+  backdropPath,
+  posterPath,
+  voteAverage,
+  voteCount,
+  runtime,
+  status,
+}: PostMainSectionProps) => {
+  const backdropImgSrc = backdropPath
+    ? `${TMDB_BACKDROP_BASE_URL}${backdropPath}`
+    : EXImg;
+
+  const posterImgSrc = posterPath
+    ? `${TMDB_POSTER_BASE_URL}${posterPath}`
+    : EXImg;
+
+  const movieStats = [
+    { label: "평점", value: `${voteAverage.toFixed(1)} / 10` },
+    { label: "투표 수", value: voteCount.toLocaleString() },
+    { label: "상영 시간", value: formatRuntime(runtime) },
+    { label: "상태", value: status },
+  ];
+
   return (
     <S.Container>
-      <S.MainImg src={EXImg} alt="슈퍼 마리오 갤럭시 배경 이미지" />
+      <S.MainImg src={backdropImgSrc} alt={`${title} 배경 이미지`} />
       <S.Info>
-        <S.PosterImg src={EXImg} alt="슈퍼 마리오 갤럭시 포스터" />
+        <S.PosterImg src={posterImgSrc} alt={`${title} 포스터`} />
         <S.TextInfo>
-          <S.Date>2026.04.01</S.Date>
-          <S.Title>슈퍼 마리오 갤럭시</S.Title>
+          <S.Date>{formatReleaseDate(releaseDate)}</S.Date>
+          <S.Title>{title}</S.Title>
           <S.TagList>
             {genres.map((genre) => (
-              <S.Tag key={genre}>{genre}</S.Tag>
+              <S.Tag key={genre.id}>{genre.name}</S.Tag>
             ))}
           </S.TagList>
           <S.GridBox>
