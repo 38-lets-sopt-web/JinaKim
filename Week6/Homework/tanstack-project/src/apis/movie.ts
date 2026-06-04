@@ -1,9 +1,9 @@
 import type { MovieDetail, MovieListResponse } from "@/types/movie";
 import api from "./instance";
 
-export const getMovieList = async () => {
+export const getMovieList = async (page: number) => {
   const { data } = await api.get<MovieListResponse>("/discover/movie", {
-    params: { api_key: import.meta.env.VITE_API_KEY },
+    params: { api_key: import.meta.env.VITE_API_KEY, page },
   });
 
   return data;

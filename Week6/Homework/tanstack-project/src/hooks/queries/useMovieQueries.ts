@@ -1,12 +1,18 @@
 import { getMovieDetail, getMovieList } from "@/apis/movie";
 import { QUERY_KEYS } from "@/constants/queryKeys";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export const useMovieListQuery = () => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: QUERY_KEYS.movies.list(),
-    queryFn: getMovieList,
-    select: (data) => data.results,
+    queryFn: ({ pageParam }) => getMovieList(pageParam),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page >= lastPage.total_pages) return undefined;
+
+      return lastPage.page + 1;
+    },
+    select: (data) => data.pages.flatMap((page) => page.results),
   });
 };
 
