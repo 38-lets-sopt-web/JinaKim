@@ -2,8 +2,13 @@ import { useMovieListQuery } from "@/hooks/queries/useMovieQueries";
 import * as S from "./CardList.styles";
 import PostCard from "./postCard/PostCard";
 import { useEffect, useRef } from "react";
+import type { VoteAverageFilter } from "@/constants/rating";
 
-const CardList = () => {
+interface CardListProps {
+  voteAverage: VoteAverageFilter;
+}
+
+const CardList = ({ voteAverage }: CardListProps) => {
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
   const {
@@ -11,7 +16,7 @@ const CardList = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useMovieListQuery();
+  } = useMovieListQuery(voteAverage);
 
   useEffect(() => {
     if (!loaderRef.current) return;
