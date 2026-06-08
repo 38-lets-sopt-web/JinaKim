@@ -90,11 +90,24 @@ body {
   padding-right: 40px;
 }
 
-.social-link-area img {
-  transition: transform 0.25s ease;
+.social-link-area a {
+  color: black;
 }
 
-.social-link-area img:hover {
+.social-icon {
+  display: block;
+  width: 50px;
+  height: 50px;
+  background-color: currentColor;
+  mask: url("assets/icon/GithubIcon.svg") center / contain no-repeat;
+  -webkit-mask: url("assets/icon/GithubIcon.svg") center / contain no-repeat;
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.social-link-area a:hover .social-icon {
+  background-color: rgb(65, 65, 65);
   transform: translateY(-2px);
 }
 
@@ -208,9 +221,8 @@ section {
 }
 
 .row-scroll-container {
-  display: flex;
-  gap: 20px;
   overflow-x: auto;
+  overflow-y: hidden;
   scroll-snap-type: x mandatory;
 
   scrollbar-width: none; /* Firefox */
@@ -221,6 +233,22 @@ section {
   display: none; /* Chrome, Safari, Edge(Chromium) */
 }
 
+.row-scroll-track {
+  display: flex;
+  width: max-content;
+  animation: infinite-scroll 24s linear infinite;
+}
+
+.row-scroll-container:hover .row-scroll-track {
+  animation-play-state: paused;
+}
+
+.row-scroll-list {
+  display: flex;
+  gap: 20px;
+  padding-right: 20px;
+}
+
 .image-box {
   flex-shrink: 0;
   width: 200px;
@@ -228,6 +256,16 @@ section {
   border-radius: 20px;
   overflow: hidden;
   scroll-snap-align: end;
+}
+
+@keyframes infinite-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .card img,
